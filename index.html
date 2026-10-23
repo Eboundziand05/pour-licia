@@ -123,6 +123,12 @@ section{position:relative}
 .rail i.done{background:rgba(255,215,0,.45)}
 .gl-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--mute)}
 
+#rot{position:fixed;z-index:70;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);display:none;align-items:center;gap:12px;padding:12px 14px 12px 16px;border-radius:999px;background:rgba(10,9,14,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,215,0,.35);font-size:14px;color:rgba(245,245,247,.9);white-space:nowrap;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+#rot svg{width:22px;height:22px;color:var(--gold);transform:rotate(90deg);animation:turn 2.4s ease-in-out infinite}
+@keyframes turn{0%,30%{transform:rotate(90deg)}60%,100%{transform:rotate(0)}}
+#rot b{color:var(--gold)}
+#rot button{width:26px;height:26px;border-radius:50%;color:var(--mute)}
+@media (orientation:landscape) and (pointer:coarse){body:not(.rot-off) #rot{display:flex}}
 /* LIGHTBOX */
 #lb{position:fixed;inset:0;z-index:90;background:rgba(2,2,5,.92);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(env(safe-area-inset-top,0px) + 64px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 24px) max(16px,env(safe-area-inset-left,0px));opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
 #lb.on{opacity:1;visibility:visible}
@@ -251,7 +257,7 @@ kbd{font-family:var(--sans);font-size:13px;font-weight:600;padding:2px 7px;borde
     <p><b>Touche pour commencer.</b></p>
     <span class="tips">
       <span class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></svg><span>Mets tes écouteurs et monte le son.</span></span>
-      <span class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2.5"/><path d="M11 18h2"/></svg><span>C'est encore plus immersif sur ta tablette, en plein écran.</span></span>
+      <span class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2.5"/><path d="M11 18h2"/></svg><span>C'est encore plus immersif sur ta tablette, <b style="color:var(--white)">tenue à la verticale</b>.</span></span>
       <span class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="15" r="4"/><circle cx="7" cy="15" r="1.5" fill="currentColor"/><path d="M15 12c2-2 5-2 6 0M15 16c2 2 5 2 6 0"/></svg><span>Joystick à gauche pour marcher. Glisse à droite pour tourner la caméra. Touche une photo pour l'agrandir.</span></span>
     </span>
     <span class="loadbar" aria-hidden="true"><i id="loadI"></i></span>
@@ -274,6 +280,7 @@ kbd{font-family:var(--sans);font-size:13px;font-weight:600;padding:2px 7px;borde
   <button class="nx" id="nx" aria-label="Chanson suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l9 7-9 7z" fill="currentColor"/><path d="M19 5v14"/></svg></button>
 </div>
 
+<div id="rot" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><span>Tourne ta tablette <b>à la verticale</b>, c'est fait pour ça.</span><button id="rotX" aria-label="Fermer">✕</button></div>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Photo">
   <button class="x glass" id="lbX" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="media" id="lbMedia"></div>
@@ -607,6 +614,7 @@ function openLB(i){
 }
 function closeLB(){if(!lbOpen)return;lbOpen=false;lb.classList.remove('on');document.body.style.overflow='';var v=lbMedia.querySelector('video');if(v)v.pause();setDuck(1)}
 document.getElementById('lbX').addEventListener('click',closeLB);
+document.getElementById('rotX').addEventListener('click',function(){document.body.classList.add('rot-off')});
 document.getElementById('lbBack').addEventListener('click',closeLB);
 lb.addEventListener('click',function(e){if(e.target===lb||e.target===lbMedia)closeLB()});
 addEventListener('keydown',function(e){if(!lbOpen)return;if(e.key==='Escape')closeLB();});
